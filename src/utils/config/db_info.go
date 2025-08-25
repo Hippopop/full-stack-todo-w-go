@@ -12,7 +12,7 @@ type DatabaseConfig struct {
 	DatabaseName EnvData
 }
 
-var requiredKeys = []EnvKey{
+var requiredDatabaseKeys = []EnvKey{
 	{"SQLPORT", true},
 	{"SQLUSER", true},
 	{"SQLPASSWORD", false},
@@ -22,7 +22,7 @@ var requiredKeys = []EnvKey{
 
 func (super *DatabaseConfig) CheckValidity(data map[string]string) (valid bool, err error) {
 	log := customLog.LogOptions{Msg: "DatabaseConfig->CheckValidity"}
-	return BasicEnvValidationCheck(log, data, requiredKeys...)
+	return BasicEnvValidationCheck(log, data, []CustomKeyValidation{}, requiredDatabaseKeys...)
 }
 
 func (super *DatabaseConfig) Initialize(data map[string]string) (err error) {
@@ -31,10 +31,10 @@ func (super *DatabaseConfig) Initialize(data map[string]string) (err error) {
 		return
 	}
 
-	super.Port = EnvData{Key: requiredKeys[0], Value: data[requiredKeys[0].Key]}
-	super.User = EnvData{Key: requiredKeys[1], Value: data[requiredKeys[1].Key]}
-	super.Pass = EnvData{Key: requiredKeys[2], Value: data[requiredKeys[2].Key]}
-	super.Host = EnvData{Key: requiredKeys[3], Value: data[requiredKeys[3].Key]}
-	super.DatabaseName = EnvData{Key: requiredKeys[4], Value: data[requiredKeys[4].Key]}
+	super.Port = EnvData{Key: requiredDatabaseKeys[0], Value: data[requiredDatabaseKeys[0].Key]}
+	super.User = EnvData{Key: requiredDatabaseKeys[1], Value: data[requiredDatabaseKeys[1].Key]}
+	super.Pass = EnvData{Key: requiredDatabaseKeys[2], Value: data[requiredDatabaseKeys[2].Key]}
+	super.Host = EnvData{Key: requiredDatabaseKeys[3], Value: data[requiredDatabaseKeys[3].Key]}
+	super.DatabaseName = EnvData{Key: requiredDatabaseKeys[4], Value: data[requiredDatabaseKeys[4].Key]}
 	return
 }

@@ -23,6 +23,10 @@ type EnvData struct {
 }
 
 type ValidateEnv func(data map[string]string) (valid bool, err error)
+type CustomKeyValidation struct {
+	Key      EnvKey
+	Validate ValidateEnv
+}
 
 // Implement this only on <pointer> types!
 type ParsableEnvData interface {
@@ -30,12 +34,12 @@ type ParsableEnvData interface {
 	CheckValidity(data map[string]string) (valid bool, err error)
 }
 
-func BasicEnvValidationCheck(log customLog.LogOptions, data map[string]string, keys ...EnvKey) (valid bool, err error) {
+func BasicEnvValidationCheck(log customLog.LogOptions, data map[string]string, customValidations []CustomKeyValidation, keys ...EnvKey) (valid bool, err error) {
 	valid = true
 	for _, key := range keys {
 		if !key.IsValid() {
 			valid = false
-			err = fmt.Errorf("env_config.go: (%s) Invalid <EnvKey> provided: <%v>", log.Msg, key)
+			err = fmt.Errorf("env_config.go: (%s) Invalid/Empty <EnvKey> provided: <%v>", log.Msg, key)
 			return
 		}
 
